@@ -7,19 +7,18 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         isLeapYear(scanner);
         scanner.close();
-        ;
         // task№2
         installApps(1, 2022);
         // task№3
         int deliveryDistance = 95;
         int deliveryPeriod = calculateDelivery(deliveryDistance);
-        deliveryPossibility(deliveryPeriod);
+        System.out.printf("Потребуется дней: %d", deliveryPeriod);
     }
 
     public static void isLeapYear(Scanner scanner) {
-        String number = isNumber(scanner);
+        String number = isValid(scanner);
         if (number.isEmpty()) {
-            System.out.println("Введено не неотрицательное число");
+            System.out.println("Введено не неотрицательное число"); // ноль учитываем
             return;
         }
         int year = Integer.parseInt(number);
@@ -30,27 +29,20 @@ public class Main {
         }
     }
 
-    public static String isNumber(Scanner scanner) {
-        String numberString = scanner.nextLine();
-        if (numberString != null && !numberString.isEmpty() && numberString.split(" ").length == 1) {
-            char[] array = numberString.toCharArray();
-            if (array[0] == '0' && numberString.length() > 1) {
-                return "";
-            }
-            for (int i = 0; i < array.length; i++) {
-                if (!isNumber(array[i])) {
-                    return "";
-                }
-            }
-            return numberString;
+    public static String isValid(Scanner scanner) {
+        String empty = "";
+        String string = scanner.nextLine();
+        if (string == null || string.isEmpty() || string.split(" ").length != 1) {
+            return empty;
         }
-        return "";
+        try {
+            Integer.parseInt(string);
+        } catch (NumberFormatException e) {
+            return  empty;
+        }
+        return  string;
     }
 
-    public static boolean isNumber(char c) {
-        String numbers = "0123456789";
-        return numbers.contains(Character.toString(c));
-    }
 
     public static void installApps(int typeOS, int year) {
         int currentYear = LocalDate.now().getYear();
@@ -80,16 +72,7 @@ public class Main {
             days += 3;
             return days;
         } else {
-            return -1000;
-        }
-    }
-
-
-    public static void deliveryPossibility(int deliveryPeriod) {
-        if (deliveryPeriod > 0) {
-            System.out.printf("Потребуется дней: %d", deliveryPeriod);
-        } else {
-            System.out.println("Мы не можем доставить товар");
+            throw new RuntimeException("Мы не можем доставить товар");
         }
     }
 }
