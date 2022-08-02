@@ -4,27 +4,52 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         // task №1
-        Scanner console = new Scanner(System.in);
-        int year = console.nextInt();
-        isLeapYear(year);
+        Scanner scanner = new Scanner(System.in);
+        isLeapYear(scanner);
+        scanner.close();
+        ;
         // task№2
         installApps(1, 2022);
         // task№3
         int deliveryDistance = 95;
         int deliveryPeriod = calculateDelivery(deliveryDistance);
-        if (deliveryPeriod  > 0) {
-            System.out.printf("Потребуется дней: %d", deliveryPeriod);
-        } else {
-            System.out.println("Мы не можем доставить товар");
-        }
+        deliveryPossibility(deliveryPeriod);
     }
 
-    public static void isLeapYear(int year) {
+    public static void isLeapYear(Scanner scanner) {
+        String number = isNumber(scanner);
+        if (number.isEmpty()) {
+            System.out.println("Введено не неотрицательное число");
+            return;
+        }
+        int year = Integer.parseInt(number);
         if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
             System.out.printf("%d — високосный год\n", year);
         } else {
             System.out.printf("%d — не високосный год\n", year);
         }
+    }
+
+    public static String isNumber(Scanner scanner) {
+        String numberString = scanner.nextLine();
+        if (numberString != null && !numberString.isEmpty() && numberString.split(" ").length == 1) {
+            char[] array = numberString.toCharArray();
+            if (array[0] == '0' && numberString.length() > 1) {
+                return "";
+            }
+            for (int i = 0; i < array.length; i++) {
+                if (!isNumber(array[i])) {
+                    return "";
+                }
+            }
+            return numberString;
+        }
+        return "";
+    }
+
+    public static boolean isNumber(char c) {
+        String numbers = "0123456789";
+        return numbers.contains(Character.toString(c));
     }
 
     public static void installApps(int typeOS, int year) {
@@ -55,7 +80,16 @@ public class Main {
             days += 3;
             return days;
         } else {
-            return 0;
+            return -1000;
+        }
+    }
+
+
+    public static void deliveryPossibility(int deliveryPeriod) {
+        if (deliveryPeriod > 0) {
+            System.out.printf("Потребуется дней: %d", deliveryPeriod);
+        } else {
+            System.out.println("Мы не можем доставить товар");
         }
     }
 }
